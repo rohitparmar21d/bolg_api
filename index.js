@@ -1,7 +1,5 @@
-const dotenv = require('dotenv');
-dotenv.config();
-const mysqlConnection = require('./src/connection');
 const app = require('./src/server');
+const mysqlConnection = require('./src/connection');
 
 // get all blogs
 app.get('/blogs', (req,res) => {
@@ -40,12 +38,29 @@ app.delete('/blogs/:id', (req,res) => {
 
 // Insert Blog
 
-app.post('/blogs/:id', (req,res) => {
+app.post('/blogs', (req,res) => {
+      let blog = { 
+                   title : req.body.title , 
+                   imagepath : req.body.imagepath , 
+                   description : req.body.description , 
+                   publisheddate : req.body.publisheddate, 
+                   author : req.body.author 
+                  } ;
+      mysqlConnection.query('INSERT INTO  blog SET ?', blog ,(err,rows,fields) => {
+          if(!err)
+            res.send("Inserted Succesfully");
+          else
+            console.log(err);
+      })
+});
 
-  mysqlConnection.query('SELECT * FROM blog WHERE blogid = ?',[req.params.id],(err,rows,fields) => {
+app.put('/blogs/:id', (req,res) => {
+    let sql = `UPDATE blog SET  title="${req.body.title}" , imagepath="${req.body.imagepath}" , description="${req.body.description}" , publisheddate="${req.body.publisheddate}" , author="${req.body.author}"  WHERE blogId="${req.params.id}"` ;
+    mysqlConnection.query(sql ,(err,rows,fields) => {
       if(!err)
-        res.send(rows);
+        res.send("Updated Succesfully");
       else
         console.log(err);
-  })
+    })
+
 });
