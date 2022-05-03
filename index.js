@@ -1,8 +1,8 @@
-const app = require('./src/server');
+const router = require('./src/server');
 const mysqlConnection = require('./src/connection');
 
 // get all blogs
-app.get('/blogs', (req,res) => {
+router.get('/blogs', (req,res) => {
     mysqlConnection.query('SELECT * FROM blog',(err,rows,fields) => {
         if(!err)
         {
@@ -17,7 +17,7 @@ app.get('/blogs', (req,res) => {
 
 // get a perticular blog
 
-app.get('/blogs/:id', (req,res) => {
+router.get('/blogs/:id', (req,res) => {
     mysqlConnection.query('SELECT * FROM blog WHERE blogid = ?',[req.params.id],(err,rows,fields) => {
         if(!err)
           res.send(rows);
@@ -27,7 +27,7 @@ app.get('/blogs/:id', (req,res) => {
 });
 
 //Delete a blog
-app.delete('/blogs/:id', (req,res) => {
+router.delete('/blogs/:id', (req,res) => {
     mysqlConnection.query('DELETE FROM blog WHERE blogid = ?',[req.params.id],(err,rows,fields) => {
         if(!err)
           res.send("Deleted Succesfully");
@@ -38,7 +38,7 @@ app.delete('/blogs/:id', (req,res) => {
 
 // Insert Blog
 
-app.post('/blogs', (req,res) => {
+router.post('/blogs', (req,res) => {
       let blog = { 
                    title : req.body.title , 
                    imagepath : req.body.imagepath , 
@@ -54,7 +54,7 @@ app.post('/blogs', (req,res) => {
       })
 });
 
-app.put('/blogs/:id', (req,res) => {
+router.put('/blogs/:id', (req,res) => {
     let sql = `UPDATE blog SET  title="${req.body.title}" , imagepath="${req.body.imagepath}" , description="${req.body.description}" , publisheddate="${req.body.publisheddate}" , author="${req.body.author}"  WHERE blogId="${req.params.id}"` ;
     mysqlConnection.query(sql ,(err,rows,fields) => {
       if(!err)
