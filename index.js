@@ -1,5 +1,6 @@
 const router = require('./src/server');
 const mysqlConnection = require('./src/connection');
+const validationResult  = require('express-validator');
 
 // get all blogs
 router.get('/blogs', (req,res) => {
